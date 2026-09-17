@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="PAW.data/PAW.data.csproj" />
   <Project Path="PAW/PAW.csproj" />
 </Solution>
