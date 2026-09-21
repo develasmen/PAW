@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="../../Downloads/PAW.Architecture/PAW.Architecture/PAW.Architecture.csproj" />
   <Project Path="PAW.data/PAW.data.csproj" />
+  <Project Path="PAW.Web/PAW.Web.csproj" Id="3d3b90ee-3be6-4bd0-8b29-5258d77e6cad" />
   <Project Path="PAW/PAW.csproj" />
 </Solution>

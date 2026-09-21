@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Downloads\PAW.Architecture\PAW.Architecture\PAW.Architecture.csproj" />
     <ProjectReference Include="..\PAW.data\PAW.data.csproj" />
   </ItemGroup>
 
