@@ -7,7 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PAW.Architecture\PAW.Architecture.csproj" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PAW.DataAccess\PAW.DataAccess.csproj" />
     <ProjectReference Include="..\PAW.Models\PAW.Models.csproj" />
   </ItemGroup>
 

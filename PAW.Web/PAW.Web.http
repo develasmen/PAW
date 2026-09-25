@@ -1,6 +1,0 @@
-@PAW.Web_HostAddress = http://localhost:5161
-
-GET {{PAW.Web_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
