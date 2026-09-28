@@ -1,0 +1,31 @@
+﻿@model IEnumerable<PAW.Models.DTO.UserDTO>
+
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<h1>Usuarios</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Correo</th>
+            <th>Rol (ID)</th>
+            <th>Activo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserId</td>
+                <td>@user.Username</td>
+                <td>@user.Email</td>
+                <td>@user.RoleId</td>
+                <td>@(user.IsActive == true ? "Sí" : "No")</td>
+            </tr>
+        }
+    </tbody>
+</table>
