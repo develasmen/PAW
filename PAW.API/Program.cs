@@ -19,7 +19,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserActionRepository, UserActionRepository>();
 builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
-
+builder.Services.AddScoped<IComponentRepository, ComponentRepository>();
 
 var app = builder.Build();
 
