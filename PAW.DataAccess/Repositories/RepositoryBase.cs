@@ -174,9 +174,9 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
         {
             return await _context.Set<T>().ToListAsync();
         }
-        catch (Exception ex)
+        catch 
         {
-            throw new PAWException(ex);
+            throw;
         }
     }
 
