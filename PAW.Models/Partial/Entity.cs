@@ -8,7 +8,7 @@ public interface IEntity
     [NotMapped]
     Guid Id { get; set; }
     [NotMapped]
-    string Comments { get; set; }
+    string? Comments { get; set; }
     [NotMapped]
     DateTime CreatedDate { get; set; }
     [NotMapped]
@@ -20,7 +20,7 @@ public class Entity : IEntity
     [NotMapped]
     public Guid Id { get; set; }
     [NotMapped]
-    public string Comments { get; set; }
+    public string? Comments { get; set; }
     [NotMapped]
     public DateTime CreatedDate { get; set; }
     [NotMapped]

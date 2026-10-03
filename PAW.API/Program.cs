@@ -17,16 +17,16 @@ builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserActionRepository, UserActionRepository>();
-<<<<<<< HEAD
+
 builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>(); 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
-=======
+
 builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IComponentRepository, ComponentRepository>();
->>>>>>> 0dcfab7c771253c0aea1368f39331762719bb020
+
 
 var app = builder.Build();
 

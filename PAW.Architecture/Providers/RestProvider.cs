@@ -46,33 +46,38 @@ public interface IRestProvider
 /// </summary>
 public class RestProvider : IRestProvider
 {
-	/// <summary>
-	/// Retrieves a resource asynchronously.
-	/// </summary>
-	/// <param name="endpoint">The endpoint for the GET request.</param>
-	/// <param name="id">The ID of the resource to retrieve. Can be null if not applicable.</param>
-	/// <returns>A task that represents the asynchronous operation, containing the response as a string.</returns>
-	public async Task<string> GetAsync(string endpoint, string? id)
-	{
-		try
-		{
-			var response = await RestProviderHelpers.CreateHttpClient(endpoint)
-				.GetAsync(id);
-			return await RestProviderHelpers.GetResponse(response);
-		}
-		catch (Exception ex)
-		{
-			throw RestProviderHelpers.ThrowError(endpoint, ex);
-		}
-	}
+    /// <summary>
+    /// Retrieves a resource asynchronously.
+    /// </summary>
+    /// <param name="endpoint">The endpoint for the GET request.</param>
+    /// <param name="id">The ID of the resource to retrieve. Can be null if not applicable.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the response as a string.</returns>
+    public async Task<string> GetAsync(string endpoint, string? id)
+    {
+        try
+        {
+            var url = string.IsNullOrEmpty(id)
+                ? endpoint
+                : $"{endpoint.TrimEnd('/')}/{id}";
 
-	/// <summary>
-	/// Creates a resource asynchronously.
-	/// </summary>
-	/// <param name="endpoint">The endpoint for the POST request.</param>
-	/// <param name="content">The content to send in the request body.</param>
-	/// <returns>A task that represents the asynchronous operation, containing the response as a string.</returns>
-	public async Task<string> PostAsync(string endpoint, string content)
+            var response = await RestProviderHelpers.CreateHttpClient(endpoint)
+                .GetAsync(url);
+
+            return await RestProviderHelpers.GetResponse(response);
+        }
+        catch (Exception ex)
+        {
+            throw RestProviderHelpers.ThrowError(endpoint, ex);
+        }
+    }
+
+    /// <summary>
+    /// Creates a resource asynchronously.
+    /// </summary>
+    /// <param name="endpoint">The endpoint for the POST request.</param>
+    /// <param name="content">The content to send in the request body.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the response as a string.</returns>
+    public async Task<string> PostAsync(string endpoint, string content)
 	{
 		try
 		{
@@ -109,24 +114,26 @@ public class RestProvider : IRestProvider
 		}
 	}
 
-	/// <summary>
-	/// Deletes a resource asynchronously.
-	/// </summary>
-	/// <param name="endpoint">The endpoint for the DELETE request.</param>
-	/// <param name="id">The ID of the resource to delete.</param>
-	/// <returns>A task that represents the asynchronous operation, containing the response as a string.</returns>
-	public async Task<string> DeleteAsync(string endpoint, string id)
-	{
-		try
-		{
-			var response = await RestProviderHelpers.CreateHttpClient(endpoint)
-				.DeleteAsync(id);
-			var result = await RestProviderHelpers.GetResponse(response);
-			return result;
-		}
-		catch (Exception ex)
-		{
-			throw RestProviderHelpers.ThrowError(endpoint, ex);
-		}
-	}
+    /// <summary>
+    /// Deletes a resource asynchronously.
+    /// </summary>
+    /// <param name="endpoint">The endpoint for the DELETE request.</param>
+    /// <param name="id">The ID of the resource to delete.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the response as a string.</returns>
+    public async Task<string> DeleteAsync(string endpoint, string id)
+    {
+        try
+        {
+            var url = $"{endpoint.TrimEnd('/')}/{id}";
+
+            var response = await RestProviderHelpers.CreateHttpClient(endpoint)
+                .DeleteAsync(url);
+
+            return await RestProviderHelpers.GetResponse(response);
+        }
+        catch (Exception ex)
+        {
+            throw RestProviderHelpers.ThrowError(endpoint, ex);
+        }
+    }
 }

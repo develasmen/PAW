@@ -13,14 +13,11 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserActionService, UserActionService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
-<<<<<<< HEAD
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
-
-=======
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IComponentService, ComponentService>();
->>>>>>> 0dcfab7c771253c0aea1368f39331762719bb020
+
 
 
 

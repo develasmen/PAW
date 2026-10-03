@@ -19,7 +19,7 @@ public class ProductDTO
     [JsonPropertyName("createdBy")]
     public string? CreatedBy { get; set; }
     [JsonPropertyName("comments")]
-    public string Comments { get; set; }
+    public string? Comments { get; set; }
     [JsonPropertyName("createdDate")]
     public DateTime CreatedDate { get; set; }
     [JsonPropertyName("modifiedDate")]

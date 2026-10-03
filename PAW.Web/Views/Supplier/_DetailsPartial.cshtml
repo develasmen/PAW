@@ -1,0 +1,55 @@
+﻿@model PAW.Models.DTO.SupplierDTO
+
+<div class="row">
+
+    <div class="col-md-6">
+        <strong>Supplier ID:</strong>
+        @Model.SupplierId
+    </div>
+
+    <div class="col-md-6">
+        <strong>Supplier Name:</strong>
+        @Model.SupplierName
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>Contact Name:</strong>
+        @Model.ContactName
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>Contact Title:</strong>
+        @Model.ContactTitle
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>Phone:</strong>
+        @Model.Phone
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>Address:</strong>
+        @Model.Address
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>City:</strong>
+        @Model.City
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>Country:</strong>
+        @Model.Country
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>Last Modified:</strong>
+        @Model.LastModified?.ToString("yyyy-MM-dd HH:mm")
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>Modified By:</strong>
+        @Model.ModifiedBy
+    </div>
+
+</div>

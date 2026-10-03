@@ -13,6 +13,7 @@ namespace PAW.API.Controllers
         public async Task<IEnumerable<ProductDTO>> GetAll()
         {
             var products = await productRepository.ReadAsync() ?? [];
+
             return products.Select(ProductDTO.ConvertFrom);
         }
 
@@ -20,6 +21,10 @@ namespace PAW.API.Controllers
         public async Task<ActionResult<ProductDTO>> GetById(int id)
         {
             var product = await productRepository.FindAsync(id);
+
+            if (product == null)
+                return NotFound();
+
             return ProductDTO.ConvertFrom(product);
         }
 
@@ -37,23 +42,33 @@ namespace PAW.API.Controllers
             foreach (var p in Products)
             {
                 if (p.ProductId > 0)
+                    await productRepository.UpdateAsync(p);
+                else
                     await productRepository.CreateAsync(p);
-                else await productRepository.UpdateAsync(p);
             }
 
             /*Products.ToList().ForEach(async x =>
             {
                 if (x.Id > 0)
                     await productRepository.CreateAsync(x);
-                else await productRepository.UpdateAsync(x);
+                else
+                    await productRepository.UpdateAsync(x);
             });*/
+
             return true;
         }
 
-        [HttpDelete]
-        public async Task<bool> Delete(Product Product)
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<bool>> Delete(int id)
         {
-            return await productRepository.DeleteAsync(Product);
+            var product = await productRepository.FindAsync(id);
+
+            if (product == null)
+                return NotFound();
+
+            var result = await productRepository.DeleteAsync(product);
+
+            return Ok(result);
         }
     }
 }

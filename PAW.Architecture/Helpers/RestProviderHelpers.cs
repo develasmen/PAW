@@ -28,23 +28,31 @@ internal static class RestProviderHelpers
 	/// <returns>A <see cref="StringContent"/> object with the specified content.</returns>
 	internal static StringContent CreateContent(string content) => new(content, Encoding.UTF8, "application/json");
 
-	/// <summary>
-	/// Reads the response from an HTTP request and ensures the response was successful.
-	/// </summary>
-	/// <param name="response">The <see cref="HttpResponseMessage"/> to read the content from.</param>
-	/// <returns>A task that represents the asynchronous operation, containing the response content as a string.</returns>
-	/// <exception cref="HttpRequestException">Thrown if the response indicates a failure.</exception>
-	internal static async Task<string> GetResponse(HttpResponseMessage response)
-	{
-		response.EnsureSuccessStatusCode();
-		return await response.Content.ReadAsStringAsync();
-	}
+    /// <summary>
+    /// Reads the response from an HTTP request and ensures the response was successful.
+    /// </summary>
+    /// <param name="response">The <see cref="HttpResponseMessage"/> to read the content from.</param>
+    /// <returns>A task that represents the asynchronous operation, containing the response content as a string.</returns>
+    /// <exception cref="HttpRequestException">Thrown if the response indicates a failure.</exception>
+    internal static async Task<string> GetResponse(HttpResponseMessage response)
+    {
+        var content = await response.Content.ReadAsStringAsync();
 
-	/// <summary>
-	/// Creates an <see cref="ApplicationException"/> with details about an error occurring during data retrieval.
-	/// </summary>
-	/// <param name="endpoint">The endpoint where the error occurred.</param>
-	/// <param name="ex">The original exception.</param>
-	/// <returns>An <see cref="ApplicationException"/> describing the error.</returns>
-	internal static Exception ThrowError(string endpoint, Exception ex) => new ApplicationException($"Error getting data from {endpoint}", ex);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException(
+                $"HTTP {(int)response.StatusCode} - {response.StatusCode}. " +
+                $"Respuesta de la API: {content}");
+        }
+
+        return content;
+    }
+
+    /// <summary>
+    /// Creates an <see cref="ApplicationException"/> with details about an error occurring during data retrieval.
+    /// </summary>
+    /// <param name="endpoint">The endpoint where the error occurred.</param>
+    /// <param name="ex">The original exception.</param>
+    /// <returns>An <see cref="ApplicationException"/> describing the error.</returns>
+    internal static Exception ThrowError(string endpoint, Exception ex) => new ApplicationException($"Error getting data from {endpoint}", ex);
 }

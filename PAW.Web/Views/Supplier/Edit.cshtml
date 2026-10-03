@@ -1,0 +1,74 @@
+﻿@model PAW.Models.DTO.SupplierDTO
+
+@{
+    ViewData["Title"] = "Edit Supplier";
+}
+
+<div class="container mt-4">
+
+    <h2>Edit Supplier</h2>
+
+    <hr />
+
+    <form asp-action="Edit" method="post">
+
+        <input type="hidden" asp-for="SupplierId" />
+
+        <div class="mb-3">
+            <label asp-for="SupplierName" class="form-label">Supplier Name</label>
+            <input asp-for="SupplierName" class="form-control" />
+            <span asp-validation-for="SupplierName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ContactName" class="form-label">Contact Name</label>
+            <input asp-for="ContactName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ContactTitle" class="form-label">Contact Title</label>
+            <input asp-for="ContactTitle" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Phone" class="form-label">Phone</label>
+            <input asp-for="Phone" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Address" class="form-label">Address</label>
+            <input asp-for="Address" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="City" class="form-label">City</label>
+            <input asp-for="City" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Country" class="form-label">Country</label>
+            <input asp-for="Country" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ModifiedBy" class="form-label">Modified By</label>
+            <input asp-for="ModifiedBy" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Save Changes
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

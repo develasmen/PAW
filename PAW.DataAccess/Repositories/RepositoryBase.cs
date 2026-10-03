@@ -174,7 +174,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
         {
             return await _context.Set<T>().ToListAsync();
         }
-        catch 
+        catch
         {
             throw;
         }
@@ -183,7 +183,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     /// <summary>
     /// Reads an entity of type T asynchronously.
     /// </summary>
-    /// <returns>A task that represents the asynchronous operation. The task result contains a collection of entities.</returns>
+    /// <returns>Entity by id.</returns>
     public async Task<T> FindAsync(int id)
     {
         try
@@ -200,7 +200,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     /// Checks if an entity of type T exists asynchronously.
     /// </summary>
     /// <param name="entity">The entity to check for existence.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating if the entity exists.</returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating success.</returns>
     public async Task<bool> ExistsAsync(T entity)
     {
         try
@@ -226,7 +226,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
 
     public virtual async Task<object> GetData()
     {
-        //llame suppliers y products
+        // llame suppliers y products
         await System.Threading.Tasks.Task.Run(() => { });
         return null;
     }
