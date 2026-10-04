@@ -23,4 +23,14 @@ public class UserRoleDTO
             UserId = (int)(userRole.UserId ?? 0)
         };
     }
+
+    public static UserRole ConvertTo(UserRoleDTO dto)
+    {
+        return new UserRole
+        {
+            Id = dto.UserRoleId,
+            RoldId = dto.RoleId,
+            UserId = dto.UserId
+        };
+    }
 }

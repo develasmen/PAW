@@ -17,4 +17,15 @@ public interface IUserRoleRepository : IRepositoryBase<UserRole>
 
 public class UserRoleRepository : RepositoryBase<UserRole>, IUserRoleRepository
 {
+    public override async Task<UserRole> FindAsync(int id)
+    {
+        try
+        {
+            return await DbContext.Set<UserRole>().FindAsync((decimal)id);
+        }
+        catch (Exception ex)
+        {
+            throw new PAWException(ex);
+        }
+    }
 }

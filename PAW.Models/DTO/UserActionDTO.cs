@@ -23,4 +23,14 @@ public class UserActionDTO
             Description = userAction.Description
         };
     }
+
+    public static UserAction ConvertTo(UserActionDTO dto)
+    {
+        return new UserAction
+        {
+            Id = dto.UserActionId,
+            Name = dto.Name,
+            Description = dto.Description
+        };
+    }
 }

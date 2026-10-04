@@ -17,4 +17,15 @@ public interface IUserActionRepository : IRepositoryBase<UserAction>
 
 public class UserActionRepository : RepositoryBase<UserAction>, IUserActionRepository
 {
+    public override async Task<UserAction> FindAsync(int id)
+    {
+        try
+        {
+            return await DbContext.Set<UserAction>().FindAsync((decimal)id);
+        }
+        catch (Exception ex)
+        {
+            throw new PAWException(ex);
+        }
+    }
 }
