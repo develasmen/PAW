@@ -8,10 +8,9 @@ namespace PAW.API.Controllers
     [ApiController]
     [Route("[controller]")]
     public class ComponentController(
-        ILogger<ComponentController> logger,
         IComponentRepository componentRepository) : ControllerBase
     {
-        [HttpGet(Name = "GetComponents")]
+        [HttpGet]
         public async Task<IEnumerable<ComponentDTO>> GetAll()
         {
             var components = await componentRepository.ReadAsync() ?? [];
@@ -19,18 +18,21 @@ namespace PAW.API.Controllers
             return components.Select(ComponentDTO.ConvertFrom);
         }
 
-        [HttpGet("{id}", Name = "GetComponentById")]
-        public async Task<ActionResult<ComponentDTO>> GetById(decimal id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ComponentDTO>> GetById(int id)
         {
-            var component =
-                await componentRepository.FindByIdAsync(id);
+            var component = await componentRepository.FindAsync(id);
 
             if (component == null)
-            {
                 return NotFound();
-            }
 
             return ComponentDTO.ConvertFrom(component);
+        }
+
+        [HttpPost("create")]
+        public async Task<bool> CreateNew([FromBody] Component component)
+        {
+            return await componentRepository.CreateAsync(component);
         }
 
         [HttpPost]
@@ -48,10 +50,18 @@ namespace PAW.API.Controllers
             return true;
         }
 
-        [HttpDelete]
-        public async Task<bool> Delete(Component component)
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<bool>> Delete(int id)
         {
-            return await componentRepository.DeleteAsync(component);
+            var component = await componentRepository.FindAsync(id);
+
+            if (component == null)
+                return NotFound();
+
+            var result =
+                await componentRepository.DeleteAsync(component);
+
+            return Ok(result);
         }
     }
 }

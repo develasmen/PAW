@@ -1,0 +1,56 @@
+﻿@model PAW.Models.DTO.ComponentDTO
+
+@{
+    ViewData["Title"] = "Edit Component";
+}
+
+<div class="container mt-4">
+
+    <h2>Edit Component</h2>
+
+    <hr />
+
+    <form asp-action="Edit" method="post">
+
+        <input type="hidden"
+               asp-for="ComponentId" />
+
+        <div class="mb-3">
+            <label asp-for="Name"
+                   class="form-label">Name</label>
+
+            <input asp-for="Name"
+                   class="form-control" />
+
+            <span asp-validation-for="Name"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Content"
+                   class="form-label">Content</label>
+
+            <textarea asp-for="Content"
+                      class="form-control"></textarea>
+
+            <span asp-validation-for="Content"
+                  class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Save Changes
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

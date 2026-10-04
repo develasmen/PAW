@@ -5,31 +5,35 @@ namespace PAW.Models.DTO;
 public class ComponentDTO
 {
     [JsonPropertyName("id")]
-    public decimal Id { get; set; }
+    public Guid Id { get; set; }
+
+    [JsonPropertyName("componentId")]
+    public int ComponentId { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name { get; set; } = null!;
+    public string? Name { get; set; }
 
     [JsonPropertyName("content")]
-    public string Content { get; set; } = null!;
+    public string? Content { get; set; }
 
     public static ComponentDTO ConvertFrom(Component component)
     {
         return new ComponentDTO
         {
-            Id = component.Id,
+            Id = Guid.NewGuid(),
+            ComponentId = (int)component.Id,
             Name = component.Name,
             Content = component.Content
         };
     }
 
-    public static Component ConvertTo(ComponentDTO componentDTO)
+    public static Component ConvertTo(ComponentDTO dto)
     {
         return new Component
         {
-            Id = componentDTO.Id,
-            Name = componentDTO.Name,
-            Content = componentDTO.Content
+            Id = dto.ComponentId,
+            Name = dto.Name!,
+            Content = dto.Content!
         };
     }
 }
