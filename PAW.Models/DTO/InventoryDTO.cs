@@ -28,6 +28,9 @@ public class InventoryDTO
     [JsonPropertyName("modifiedBy")]
     public string? ModifiedBy { get; set; }
 
+    [JsonPropertyName("products")]
+    public IEnumerable<ProductDTO> Products { get; set; } = [];
+
     public static InventoryDTO ConvertFrom(Inventory inventory)
     {
         return new InventoryDTO
@@ -39,21 +42,25 @@ public class InventoryDTO
             LastUpdated = inventory.LastUpdated,
             ProductId = inventory.ProductId,
             DateAdded = inventory.DateAdded,
-            ModifiedBy = inventory.ModifiedBy
+            ModifiedBy = inventory.ModifiedBy,
+
+            Products = inventory.Products?
+                .Select(ProductDTO.ConvertFrom)
+                .ToList() ?? []
         };
     }
 
-    public static Inventory ConvertTo(InventoryDTO inventoryDTO)
+    public static Inventory ConvertTo(InventoryDTO dto)
     {
         return new Inventory
         {
-            InventoryId = inventoryDTO.InventoryId,
-            UnitPrice = inventoryDTO.UnitPrice,
-            UnitsInStock = inventoryDTO.UnitsInStock,
-            LastUpdated = inventoryDTO.LastUpdated,
-            ProductId = inventoryDTO.ProductId,
-            DateAdded = inventoryDTO.DateAdded,
-            ModifiedBy = inventoryDTO.ModifiedBy
+            InventoryId = dto.InventoryId,
+            UnitPrice = dto.UnitPrice,
+            UnitsInStock = dto.UnitsInStock,
+            LastUpdated = dto.LastUpdated,
+            ProductId = dto.ProductId,
+            DateAdded = dto.DateAdded,
+            ModifiedBy = dto.ModifiedBy
         };
     }
 }

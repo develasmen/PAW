@@ -8,32 +8,39 @@ namespace PAW.API.Controllers
     [ApiController]
     [Route("[controller]")]
     public class InventoryController(
-        ILogger<InventoryController> logger,
         IInventoryRepository inventoryRepository) : ControllerBase
     {
-        [HttpGet(Name = "GetInventories")]
+        [HttpGet]
         public async Task<IEnumerable<InventoryDTO>> GetAll()
         {
-            var inventories = await inventoryRepository.ReadAsync() ?? [];
+            var inventories =
+                await inventoryRepository.ReadAsync() ?? [];
 
             return inventories.Select(InventoryDTO.ConvertFrom);
         }
 
-        [HttpGet("{id:int}", Name = "GetInventoryById")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<InventoryDTO>> GetById(int id)
         {
-            var inventory = await inventoryRepository.FindAsync(id);
+            var inventory =
+                await inventoryRepository.FindWithProductsAsync(id);
 
             if (inventory == null)
-            {
                 return NotFound();
-            }
 
             return InventoryDTO.ConvertFrom(inventory);
         }
 
+        [HttpPost("create")]
+        public async Task<bool> CreateNew(
+            [FromBody] Inventory inventory)
+        {
+            return await inventoryRepository.CreateAsync(inventory);
+        }
+
         [HttpPost]
-        public async Task<bool> Save([FromBody] IEnumerable<Inventory> inventories)
+        public async Task<bool> Save(
+            [FromBody] IEnumerable<Inventory> inventories)
         {
             foreach (var inventory in inventories)
             {
@@ -46,10 +53,19 @@ namespace PAW.API.Controllers
             return true;
         }
 
-        [HttpDelete]
-        public async Task<bool> Delete(Inventory inventory)
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<bool>> Delete(int id)
         {
-            return await inventoryRepository.DeleteAsync(inventory);
+            var inventory =
+                await inventoryRepository.FindAsync(id);
+
+            if (inventory == null)
+                return NotFound();
+
+            var result =
+                await inventoryRepository.DeleteAsync(inventory);
+
+            return Ok(result);
         }
     }
 }

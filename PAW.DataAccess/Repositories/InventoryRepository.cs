@@ -1,4 +1,5 @@
-﻿using PAW.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PAW.Models;
 using PAW.Repositories;
 
 namespace PAW.DataAccess.Repositories;
@@ -13,8 +14,17 @@ public interface IInventoryRepository : IRepositoryBase<Inventory>
     Task<bool> UpdateAsync(Inventory entity);
     Task<bool> UpdateManyAsync(IEnumerable<Inventory> entities);
     Task<bool> ExistsAsync(Inventory entity);
+
+    Task<Inventory?> FindWithProductsAsync(int id);
 }
 
-public class InventoryRepository : RepositoryBase<Inventory>, IInventoryRepository
+public class InventoryRepository
+    : RepositoryBase<Inventory>, IInventoryRepository
 {
+    public async Task<Inventory?> FindWithProductsAsync(int id)
+    {
+        return await DbContext.Inventories
+            .Include(x => x.Products)
+            .FirstOrDefaultAsync(x => x.InventoryId == id);
+    }
 }
