@@ -1,71 +1,75 @@
 ﻿@model PAW.Web.Models.PagedResult<PAW.Models.DTO.RoleDTO>
 
-@{
-    ViewData["Title"] = "Roles";
-}
+@{ ViewData["Title"] = "Roles"; }
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Roles</h2>
         <a asp-action="Create" class="btn btn-primary">Add Role</a>
     </div>
-    <div class="card shadow-sm">
-        <div class="card-body table-responsive">
-            <table class="table table-striped table-hover align-middle">
-                <thead class="table-dark"><tr><th>Role ID</th><th>Name</th><th class="text-center">Actions</th></tr></thead>
-                <tbody>
-                    @if (Model.Items.Any())
-                    {
-                        foreach (var role in Model.Items)
-                        {
-                            <tr>
-                                <td>@role.RoleId</td>
-                                <td>@role.RoleName</td>
-                                <td class="text-center">
-                                    <div class="btn-group" role="group">
-                                        <a asp-action="Edit" asp-route-id="@role.RoleId" class="btn btn-sm btn-warning">Edit</a>
-                                        <button type="button" class="btn btn-sm btn-info" onclick="showRoleDetails(@role.RoleId)">Details</button>
-                                        <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('¿Desea eliminar este rol?');">
-                                            <input type="hidden" name="id" value="@role.RoleId" />
-                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr><td colspan="3" class="text-center">No roles found.</td></tr>
-                    }
-                </tbody>
-            </table>
-            @if (Model.TotalPages > 1)
+    <div class="card shadow-sm"><div class="card-body table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark"><tr><th>Role ID</th><th>Name</th><th class="text-center">Actions</th></tr></thead>
+            <tbody>
+            @if (Model.Items.Any())
             {
-                <nav aria-label="Roles pages">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item @(Model.HasPrevious ? "" : "disabled")"><a class="page-link" asp-action="Index" asp-route-page="1">&laquo;&laquo;</a></li>
-                        <li class="page-item @(Model.HasPrevious ? "" : "disabled")"><a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)">&laquo;</a></li>
-                        @for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
-                        {
-                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")"><a class="page-link" asp-action="Index" asp-route-page="@i">@i</a></li>
-                        }
-                        <li class="page-item @(Model.HasNext ? "" : "disabled")"><a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)">&raquo;</a></li>
-                        <li class="page-item @(Model.HasNext ? "" : "disabled")"><a class="page-link" asp-action="Index" asp-route-page="@Model.TotalPages">&raquo;&raquo;</a></li>
-                    </ul>
-                </nav>
+                foreach (var role in Model.Items)
+                {
+                    <tr>
+                        <td>@role.RoleId</td><td>@role.RoleName</td>
+                        <td class="text-center"><div class="btn-group" role="group">
+                            <a asp-action="Edit" asp-route-id="@role.RoleId" class="btn btn-sm btn-warning">Edit</a>
+                            <button type="button" class="btn btn-sm btn-info" onclick="showRoleDetails(@role.RoleId)">Details</button>
+                            <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('¿Desea eliminar este rol?');">
+                                <input type="hidden" name="id" value="@role.RoleId" />
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </div></td>
+                    </tr>
+                }
             }
-        </div>
-    </div>
+            else { <tr><td colspan="3" class="text-center">No roles found.</td></tr> }
+            </tbody>
+        </table>
+        @if (Model.TotalPages > 1)
+        {
+            <nav aria-label="Roles pages"><ul class="pagination justify-content-center">
+                <li class="page-item @(Model.HasPrevious ? "" : "disabled")"><a class="page-link" asp-action="Index" asp-route-page="1">&laquo;&laquo;</a></li>
+                <li class="page-item @(Model.HasPrevious ? "" : "disabled")"><a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)">&laquo;</a></li>
+                        @{
+                            int windowStart = Math.Max(1, Model.CurrentPage - 1);
+                            int windowEnd = Math.Min(Model.TotalPages, Model.CurrentPage + 1);
+                        }
+
+                        @if (windowStart > 1)
+                        {
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        }
+
+                        @for (int i = windowStart; i <= windowEnd; i++)
+                        {
+                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+                            </li>
+                        }
+
+                        @if (windowEnd < Model.TotalPages)
+                        {
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        }
+
+                <li class="page-item @(Model.HasNext ? "" : "disabled")"><a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)">&raquo;</a></li>
+                <li class="page-item @(Model.HasNext ? "" : "disabled")"><a class="page-link" asp-action="Index" asp-route-page="@Model.TotalPages">&raquo;&raquo;</a></li>
+            </ul></nav>
+        }
+    </div></div>
 </div>
 
 <div class="modal fade" id="roleDetailsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header"><h5 class="modal-title">Role Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-            <div class="modal-body" id="roleDetailsContent"></div>
-        </div>
-    </div>
+    <div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Role Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body" id="roleDetailsContent"></div>
+    </div></div>
 </div>
 
 @section Scripts {
