@@ -1,31 +1,67 @@
-﻿@model IEnumerable<PAW.Models.DTO.UserDTO>
+﻿@model PAW.Web.Models.PagedResult<PAW.Models.DTO.UserDTO>
 
-@{
-    ViewData["Title"] = "Usuarios";
-}
+@{ ViewData["Title"] = "Users"; }
 
-<h1>Usuarios</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Usuario</th>
-            <th>Correo</th>
-            <th>Rol (ID)</th>
-            <th>Activo</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Users</h2>
+        <a asp-action="Create" class="btn btn-primary">Add User</a>
+    </div>
+    <div class="card shadow-sm"><div class="card-body table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark"><tr><th>User ID</th><th>Username</th><th>Email</th><th>Role ID</th><th>Active</th><th class="text-center">Actions</th></tr></thead>
+            <tbody>
+            @if (Model.Items.Any())
+            {
+                foreach (var user in Model.Items)
+                {
+                    <tr>
+                        <td>@user.UserId</td><td>@user.Username</td><td>@user.Email</td><td>@user.RoleId</td>
+                        <td>@(user.IsActive == true ? "Yes" : user.IsActive == false ? "No" : "Unknown")</td>
+                        <td class="text-center"><div class="btn-group" role="group">
+                            <a asp-action="Edit" asp-route-id="@user.UserId" class="btn btn-sm btn-warning">Edit</a>
+                            <button type="button" class="btn btn-sm btn-info" onclick="showUserDetails(@user.UserId)">Details</button>
+                            <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('¿Desea eliminar este usuario?');">
+                                <input type="hidden" name="id" value="@user.UserId" />
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </div></td>
+                    </tr>
+                }
+            }
+            else { <tr><td colspan="6" class="text-center">No users found.</td></tr> }
+            </tbody>
+        </table>
+        @if (Model.TotalPages > 1)
         {
-            <tr>
-                <td>@user.UserId</td>
-                <td>@user.Username</td>
-                <td>@user.Email</td>
-                <td>@user.RoleId</td>
-                <td>@(user.IsActive == true ? "Sí" : "No")</td>
-            </tr>
+            <nav aria-label="Users pages"><ul class="pagination justify-content-center">
+                <li class="page-item @(Model.HasPrevious ? "" : "disabled")"><a class="page-link" asp-action="Index" asp-route-page="1">&laquo;&laquo;</a></li>
+                <li class="page-item @(Model.HasPrevious ? "" : "disabled")"><a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)">&laquo;</a></li>
+                @for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")"><a class="page-link" asp-action="Index" asp-route-page="@i">@i</a></li>
+                }
+                <li class="page-item @(Model.HasNext ? "" : "disabled")"><a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)">&raquo;</a></li>
+                <li class="page-item @(Model.HasNext ? "" : "disabled")"><a class="page-link" asp-action="Index" asp-route-page="@Model.TotalPages">&raquo;&raquo;</a></li>
+            </ul></nav>
         }
-    </tbody>
-</table>
+    </div></div>
+</div>
+
+<div class="modal fade" id="userDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog"><div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">User Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body" id="userDetailsContent"></div>
+    </div></div>
+</div>
+
+@section Scripts {
+    <script>
+        async function showUserDetails(id) {
+            const response = await fetch('@Url.Action("Details", "User")?id=' + encodeURIComponent(id));
+            if (!response.ok) { alert('Could not load user details.'); return; }
+            document.getElementById('userDetailsContent').innerHTML = await response.text();
+            new bootstrap.Modal(document.getElementById('userDetailsModal')).show();
+        }
+    </script>
+}

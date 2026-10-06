@@ -1,0 +1,37 @@
+﻿@model PAW.Models.DTO.UserDTO
+
+@{ ViewData["Title"] = "Edit User"; }
+
+<div class="container mt-4">
+    <h2>Edit User</h2><hr />
+    <form asp-action="Edit" asp-route-id="@Model.UserId" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="UserId" />
+        <div class="mb-3">
+            <label asp-for="Username" class="form-label">Username</label>
+            <input asp-for="Username" class="form-control" required />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" type="email" class="form-control" required />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="RoleId" class="form-label">Role ID</label>
+            <input asp-for="RoleId" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="IsActive" class="form-label">Active</label>
+            <select asp-for="IsActive" class="form-select"><option value="">Unknown</option><option value="true">Yes</option><option value="false">No</option></select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ModifiedBy" class="form-label">Modified By</label>
+            <input asp-for="ModifiedBy" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+@section Scripts { @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); } }

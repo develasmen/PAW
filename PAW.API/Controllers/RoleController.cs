@@ -43,9 +43,13 @@ public class RoleController(IRoleRepository roleRepository) : ControllerBase
         return true;
     }
 
-    [HttpDelete]
-    public async Task<bool> Delete([FromBody] Role role)
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult<bool>> Delete(int id)
     {
-        return await roleRepository.DeleteAsync(role);
+        var role = await roleRepository.FindAsync(id);
+        if (role == null)
+            return NotFound();
+
+        return Ok(await roleRepository.DeleteAsync(role));
     }
 }
