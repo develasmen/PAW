@@ -1,0 +1,45 @@
+﻿v@model PAW.Models.DTO.PawTaskDTO
+
+<div class="row">
+
+    <div class="col-md-6">
+        <strong>Task ID:</strong>
+        @Model.Id
+    </div>
+
+    <div class="col-md-6">
+        <strong>Name:</strong>
+        @Model.Name
+    </div>
+
+    <div class="col-md-12 mt-3">
+        <strong>Description:</strong>
+        @Model.Description
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>Status:</strong>
+        @Model.Status
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>Due Date:</strong>
+        @Model.DueDate?.ToString("yyyy-MM-dd HH:mm")
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>Created Date:</strong>
+        @Model.CreatedAt?.ToString("yyyy-MM-dd HH:mm")
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>Modified Date:</strong>
+        @Model.LastModified?.ToString("yyyy-MM-dd HH:mm")
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <strong>Modified By:</strong>
+        @Model.ModifiedBy
+    </div>
+
+</div>
