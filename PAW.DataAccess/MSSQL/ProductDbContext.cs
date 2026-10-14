@@ -276,7 +276,7 @@ public partial class ProductDbContext : DbContext
 
         modelBuilder.Entity<UserRole>(entity =>
         {
-            entity.HasKey(e => e.Id);
+            entity.HasNoKey();
 
             entity.Property(e => e.Id).HasColumnType("numeric(18, 0)");
             entity.Property(e => e.RoldId)

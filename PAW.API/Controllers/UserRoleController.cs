@@ -12,7 +12,8 @@ namespace PAW.API.Controllers
         [HttpGet]
         public async Task<IEnumerable<UserRoleDTO>> GetAll()
         {
-            var userRoles = await userRoleRepository.ReadAsync() ?? [];
+            var userRoles = await userRoleRepository.ReadAsync();
+
             return userRoles.Select(UserRoleDTO.ConvertFrom);
         }
 
@@ -26,36 +27,45 @@ namespace PAW.API.Controllers
 
             return UserRoleDTO.ConvertFrom(userRole);
         }
-
+        
         [HttpPost("create")]
         public async Task<bool> CreateNew([FromBody] UserRole userRole)
         {
-            return await userRoleRepository.CreateAsync(userRole);
+            return await userRoleRepository.CreateUserRoleAsync(userRole);
         }
+
+
+        [HttpPost]
 
         [HttpPost]
         public async Task<bool> Save([FromBody] IEnumerable<UserRole> userRoles)
         {
             foreach (var ur in userRoles)
             {
-                if (ur.Id > 0)
-                    await userRoleRepository.UpdateAsync(ur);
+                if (ur.Id.HasValue && ur.Id > 0)
+                {
+                    await userRoleRepository.UpdateUserRoleAsync(ur);
+                }
                 else
-                    await userRoleRepository.CreateAsync(ur);
+                {
+                    await userRoleRepository.CreateUserRoleAsync(ur);
+                }
             }
 
             return true;
         }
 
-        [HttpDelete("{id:int}")]
+       [HttpDelete("{id:int}")]
         public async Task<ActionResult<bool>> Delete(int id)
         {
             var userRole = await userRoleRepository.FindAsync(id);
 
             if (userRole == null)
+            {
                 return NotFound();
+            }
 
-            var result = await userRoleRepository.DeleteAsync(userRole);
+            var result = await userRoleRepository.DeleteUserRoleAsync(userRole);
 
             return Ok(result);
         }

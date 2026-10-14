@@ -1,0 +1,26 @@
+﻿@model PAW.Models.Role
+
+@{
+    ViewData["Title"] = "Add Role";
+}
+
+<div class="container mt-4">
+    <h2>Add Role</h2><hr />
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="RoleName" class="form-label">Role Name</label>
+            <input asp-for="RoleName" class="form-control" required />
+            <span asp-validation-for="RoleName" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}
