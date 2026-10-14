@@ -1,4 +1,4 @@
-﻿@model PAW.Models.Task
+@model PAW.Models.Task
 
 @{
     ViewData["Title"] = "Add Task";
@@ -8,7 +8,7 @@
 
     <h2>Add Task</h2>
 
-    <hr />
+    <hr /><div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
     <form asp-action="Create" method="post">
 
@@ -51,23 +51,7 @@
                    type="datetime-local" />
         </div>
 
-        <div class="mb-3">
-            <label asp-for="CreatedAt" class="form-label">
-                Created Date
-            </label>
-            <input asp-for="CreatedAt"
-                   class="form-control"
-                   type="datetime-local" />
-        </div>
 
-        <div class="mb-3">
-            <label asp-for="LastModified" class="form-label">
-                Modified Date
-            </label>
-            <input asp-for="LastModified"
-                   class="form-control"
-                   type="datetime-local" />
-        </div>
 
         <div class="mb-3">
             <label asp-for="ModifiedBy" class="form-label">

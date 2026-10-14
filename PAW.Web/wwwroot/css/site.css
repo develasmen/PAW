@@ -99,3 +99,16 @@ body {
         width: 240px;
     }
 }
+
+/* Reservar espacio para el tipo de cambio a la derecha sin tapar el CRUD. */
+.paw-content { padding-right: 310px; }
+.exchange-rate-widget { z-index: 1000; }
+@media (max-width: 991.98px) {
+    .paw-content { padding-right: 12px; }
+    .exchange-rate-widget {
+        position: static;
+        width: auto;
+        max-width: 400px;
+        margin: 0 12px 80px auto;
+    }
+}

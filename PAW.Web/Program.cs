@@ -14,7 +14,11 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserActionService, UserActionService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
-builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddHttpClient<ITaskService, TaskService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["TasksApi:BaseUrl"] ?? "http://localhost:5080/");
+    client.Timeout = TimeSpan.FromSeconds(15);
+});
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IComponentService, ComponentService>();
 

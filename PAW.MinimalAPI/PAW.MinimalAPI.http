@@ -1,0 +1,19 @@
+@baseUrl = http://localhost:5080
+# Sustituir por el ID devuelto al crear una tarea de prueba.
+@taskId = 0
+
+GET {{baseUrl}}/tasks
+###
+GET {{baseUrl}}/tasks/{{taskId}}
+###
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{ "name": "Revisar inventario", "description": "Verificar existencias", "status": "Pendiente", "modifiedBy": "Usuario" }
+###
+PUT {{baseUrl}}/tasks/{{taskId}}
+Content-Type: application/json
+
+{ "name": "Revisar inventario", "description": "Existencias verificadas", "status": "Completada", "modifiedBy": "Usuario" }
+###
+DELETE {{baseUrl}}/tasks/{{taskId}}

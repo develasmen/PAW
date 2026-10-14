@@ -13,12 +13,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PAW.DataAccess", "PAW.DataA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PAW.Architecture", "PAW.Architecture\PAW.Architecture.csproj", "{168DB680-82D5-3A8D-C8CB-420529DB86CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PAW.MinimalAPI", "PAW.MinimalAPI\PAW.MinimalAPI.csproj", "{1D9B9AB0-23B9-4DFC-A348-4B450D117C6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D9B9AB0-23B9-4DFC-A348-4B450D117C6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D9B9AB0-23B9-4DFC-A348-4B450D117C6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D9B9AB0-23B9-4DFC-A348-4B450D117C6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D9B9AB0-23B9-4DFC-A348-4B450D117C6F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0F342937-4DAE-42E5-9789-97384BFDACE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0F342937-4DAE-42E5-9789-97384BFDACE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F342937-4DAE-42E5-9789-97384BFDACE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
