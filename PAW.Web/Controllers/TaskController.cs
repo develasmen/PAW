@@ -1,139 +1,111 @@
-﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using PAW.Models.DTO;
 using PAW.Web.Models;
 using PAW.Web.Services;
 using PawTask = PAW.Models.Task;
 
-namespace PAW.Web.Controllers
+namespace PAW.Web.Controllers;
+
+public class TaskController(ITaskService taskService, ILogger<TaskController> logger) : Controller
 {
-    public class TaskController : Controller
+    public async Task<IActionResult> Index(int page = 1)
     {
-        private readonly ITaskService _taskService;
-        private readonly ILogger<TaskController> _logger;
-
-        public TaskController(
-            ITaskService taskService,
-            ILogger<TaskController> logger)
+        List<PawTaskDTO> tasks;
+        try { tasks = (await taskService.GetTasksAsync()).ToList(); }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
         {
-            _taskService = taskService;
-            _logger = logger;
+            logger.LogError(ex, "No se pudieron cargar las tareas.");
+            ViewData["TasksError"] = "No se pudieron cargar las tareas. Verifique que PAW.MinimalAPI esté en ejecución y que la base de datos esté disponible.";
+            tasks = [];
         }
-
-        public async Task<IActionResult> Index(int page = 1)
+        const int pageSize = 25;
+        var totalPages = Math.Max(1, (int)Math.Ceiling((double)tasks.Count / pageSize));
+        page = Math.Clamp(page, 1, totalPages);
+        return View(new PagedResult<PawTaskDTO>
         {
-            var tasks =
-                await _taskService.GetTasksAsync();
+            Items = tasks.Skip((page - 1) * pageSize).Take(pageSize).ToList(),
+            CurrentPage = page, PageSize = pageSize, TotalItems = tasks.Count
+        });
+    }
 
-            const int pageSize = 25;
+    [HttpGet]
+    public IActionResult Create() => View();
 
-            var totalItems = tasks.Count();
-
-            if (page < 1)
-                page = 1;
-
-            var totalPages =
-                (int)Math.Ceiling((double)totalItems / pageSize);
-
-            if (totalPages > 0 && page > totalPages)
-                page = totalPages;
-
-            var items = tasks
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            var model = new PagedResult<PawTaskDTO>
-            {
-                Items = items,
-                CurrentPage = page,
-                PageSize = pageSize,
-                TotalItems = totalItems
-            };
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public IActionResult Create()
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(PawTask task)
+    {
+        task.Id = 0;
+        if (!ModelState.IsValid) return View(task);
+        try { await taskService.SaveTaskAsync(task); }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
         {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create(PawTask task)
-        {
-            if (!ModelState.IsValid)
-                return View(task);
-
-            await _taskService
-                .SaveTaskAsync(task);
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var task =
-                await _taskService.GetTaskByIdAsync(id);
-
-            if (task == null)
-                return NotFound();
-
+            logger.LogError(ex, "No se pudo crear la tarea.");
+            ModelState.AddModelError(string.Empty, "No se pudo guardar la tarea. Revise los datos y la conexión con la API.");
             return View(task);
         }
+        TempData["TasksSuccess"] = "Tarea creada correctamente.";
+        return RedirectToAction(nameof(Index));
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(
-            [FromForm] PawTaskDTO dto)
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        try
         {
-            if (!ModelState.IsValid)
-                return View(dto);
-
-            var task = PawTaskDTO.ConvertTo(dto);
-
-            await _taskService
-                .SaveTaskAsync(task);
-
-            return RedirectToAction(nameof(Index));
+            var task = await taskService.GetTaskByIdAsync(id);
+            return task is null ? NotFound() : View(task);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
         {
-            var task =
-                await _taskService.GetTaskByIdAsync(id);
-
-            if (task == null)
-                return NotFound();
-
-            return PartialView(
-                "_DetailsPartial",
-                task);
+            logger.LogError(ex, "No se pudo consultar la tarea.");
+            return StatusCode(503, "No se pudo consultar la tarea. La API no está disponible.");
         }
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit([FromForm] PawTaskDTO dto)
+    {
+        if (dto.Id <= 0) return BadRequest();
+        if (!ModelState.IsValid) return View(dto);
+        try { await taskService.SaveTaskAsync(PawTaskDTO.ConvertTo(dto)); }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
         {
-            await _taskService
-                .DeleteTaskAsync(id);
-
-            return RedirectToAction(nameof(Index));
+            logger.LogError(ex, "No se pudo actualizar la tarea.");
+            ModelState.AddModelError(string.Empty, "No se pudo guardar la tarea. Revise los datos y la conexión con la API.");
+            return View(dto);
         }
+        TempData["TasksSuccess"] = "Tarea actualizada correctamente.";
+        return RedirectToAction(nameof(Index));
+    }
 
-        [ResponseCache(
-            Duration = 0,
-            Location = ResponseCacheLocation.None,
-            NoStore = true)]
-        public IActionResult Error()
+    [HttpGet]
+    public async Task<IActionResult> Details(int id)
+    {
+        try
         {
-            return View(new ErrorViewModel
-            {
-                RequestId =
-                    Activity.Current?.Id ??
-                    HttpContext.TraceIdentifier
-            });
+            var task = await taskService.GetTaskByIdAsync(id);
+            return task is null ? NotFound() : PartialView("_DetailsPartial", task);
         }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            logger.LogError(ex, "No se pudieron consultar los detalles.");
+            return StatusCode(503, "No se pudieron consultar los detalles de la tarea.");
+        }
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
+        {
+            if (!await taskService.DeleteTaskAsync(id)) return NotFound();
+            TempData["TasksSuccess"] = "Tarea eliminada correctamente.";
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            logger.LogError(ex, "No se pudo eliminar la tarea.");
+            TempData["TasksError"] = "No se pudo eliminar la tarea. Intente nuevamente.";
+        }
+        return RedirectToAction(nameof(Index));
     }
 }

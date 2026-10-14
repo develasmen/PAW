@@ -1,10 +1,18 @@
-﻿@model PAW.Web.Models.PagedResult<PAW.Models.DTO.PawTaskDTO>
+@model PAW.Web.Models.PagedResult<PAW.Models.DTO.PawTaskDTO>
 
 @{
     ViewData["Title"] = "Task Page";
 }
 
 <div class="container mt-4">
+    @if (ViewData["TasksError"] is string || TempData["TasksError"] is string)
+    {
+        <div class="alert alert-danger" role="alert">@(ViewData["TasksError"] ?? TempData["TasksError"])</div>
+    }
+    @if (TempData["TasksSuccess"] is string success)
+    {
+        <div class="alert alert-success" role="status">@success</div>
+    }
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Tasks</h2>
@@ -229,18 +237,17 @@
 
 @section Scripts {
     <script>
-        function showTaskDetails(id) {
-            fetch('/Task/Details?id=' + id)
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('taskDetailsContent').innerHTML = html;
-
-                    var modal = new bootstrap.Modal(
-                        document.getElementById('taskDetailsModal')
-                    );
-
-                    modal.show();
-                });
+        async function showTaskDetails(id) {
+            const content = document.getElementById('taskDetailsContent');
+            content.textContent = 'Cargando...';
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('taskDetailsModal')).show();
+            try {
+                const response = await fetch('@Url.Action("Details", "Task")?id=' + id);
+                if (!response.ok) throw new Error();
+                content.innerHTML = await response.text();
+            } catch {
+                content.textContent = 'No se pudieron cargar los detalles de la tarea.';
+            }
         }
     </script>
 }
